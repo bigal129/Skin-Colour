@@ -1,2 +1,2 @@
-# Skin-Colour-
+# Skin-Colour
 Masters thesis - skin colour selection
