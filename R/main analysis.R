@@ -66,53 +66,65 @@ for(n in 1:N){
 	insol.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 	cluster.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 	popfluc.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-
+	milk.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+ 
 	null.best.minor <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.minor, trace=trace, NP=NP)
-	domestic.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=dom, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	insol.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 	cluster.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 	popfluc.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	milk.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
-	domestic.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=dom.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	insol.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 	cluster.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 	popfluc.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	milk.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 
-	domestic.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=dom.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	insol.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 	cluster.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 	popfluc.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	milk.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
 	# Store results
 	res <- data.frame(locus=locus,
 			null.major.loglik=-null.best.major$value, 
 			null.major.pars=paste(null.best.major$par,collapse=','),
-			domestic.major.loglik=-domestic.best.major$value,
-			domestic.major.pars=paste(domestic.best.major$par,collapse=','),
 			cluster.major.loglik=-cluster.best.major$value,
 			cluster.major.pars=paste(cluster.best.major$par,collapse=','),
 			popfluc.major.loglik=-popfluc.best.major$value,
 			popfluc.major.pars=paste(popfluc.best.major$par,collapse=','),
+			insol.major.loglik=-insol.best.major$value,
+			insol.major.pars=paste(insol.best.major$par,collapse=','),
+      milk.major.loglik=-milk.best.major$value,
+			milk.major.pars=paste(milk.best.major$par,collapse=','),
 
 			null.minor.loglik=-null.best.minor$value, 
 			null.minor.pars=paste(null.best.minor$par,collapse=','),
-			domestic.minor.loglik=-domestic.best.minor$value,
-			domestic.minor.pars=paste(domestic.best.minor$par,collapse=','),
 			cluster.minor.loglik=-cluster.best.minor$value,
 			cluster.minor.pars=paste(cluster.best.minor$par,collapse=','),
 			popfluc.minor.loglik=-popfluc.best.minor$value,
 			popfluc.minor.pars=paste(popfluc.best.minor$par,collapse=','),
+			insol.minor.loglik=-insol.best.minor$value,
+			insol.minor.pars=paste(insol.best.minor$par,collapse=','),
+			milk.minor.loglik=-milk.best.minor$value,
+			milk.minor.pars=paste(milk.best.minor$par,collapse=','),
 
-			domestic.inv.major.loglik=-domestic.inv.best.major$value,
-			domestic.inv.major.pars=paste(domestic.inv.best.major$par,collapse=','),
 			cluster.inv.major.loglik=-cluster.inv.best.major$value,
 			cluster.inv.major.pars=paste(cluster.inv.best.major$par,collapse=','),
 			popfluc.inv.major.loglik=-popfluc.inv.best.major$value,
 			popfluc.inv.major.pars=paste(popfluc.inv.best.major$par,collapse=','),
+			insol.inv.major.loglik=-insol.inv.best.major$value,
+			insol.inv.major.pars=paste(insol.inv.best.major$par,collapse=','),
+			milk.inv.major.loglik=-milk.inv.best.major$value,
+			milk.inv.major.pars=paste(milk.inv.best.major$par,collapse=','),
 
-			domestic.inv.minor.loglik=-domestic.inv.best.minor$value,
-			domestic.inv.minor.pars=paste(domestic.inv.best.minor$par,collapse=','),
 			cluster.inv.minor.loglik=-cluster.inv.best.minor$value,
 			cluster.inv.minor.pars=paste(cluster.inv.best.minor$par,collapse=','),
 			popfluc.inv.minor.loglik=-popfluc.inv.best.minor$value,
-			popfluc.inv.minor.pars=paste(popfluc.inv.best.minor$par,collapse=',')
+			popfluc.inv.minor.pars=paste(popfluc.inv.best.minor$par,collapse=','),
+			insol.inv.minor.loglik=-insol.inv.best.minor$value,
+			insol.inv.minor.pars=paste(insol.inv.best.minor$par,collapse=','),
+			milk.inv.minor.loglik=-milk.inv.best.minor$value,
+			milk.inv.minor.pars=paste(milk.inv.best.minor$par,collapse=',')
 			)	
 
 	summary <- rbind(summary,res)
