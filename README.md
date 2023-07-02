@@ -7,3 +7,4 @@ This analysis is done over 12 genes in 15 loci
 Compared agaisnt a major and minor null 
 
 Outputted a results csv for this 
+Outputted 100x for sensitivity testing
