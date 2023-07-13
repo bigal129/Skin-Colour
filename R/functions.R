@@ -180,8 +180,9 @@ create.all.freqs <- function(S.vec, f.start){
 	freqs <- 1/(exp(x)+1)
 return(freqs)}
 #--------------------------------------------------------------------------------------------------------------------------------
-add.allele.frequency.curve <- function(pars, var, x){
+add.allele.frequency.curve <- function(pars, var, x, alpha=1){
 
+	require(scales)
 	scale <- pars[1]
 	weight <- pars[2]
 	f.start <- pars[3]
@@ -190,6 +191,6 @@ add.allele.frequency.curve <- function(pars, var, x){
 	# floating point bullshit
 	if(exponent<0.00000001)exponent <- 0
 	freq <- create.all.freqs(scale * var^exponent, f.start)
-	lines(x,freq,  type='l')
+	lines(x,freq, col=alpha(1,alpha))
 	}
 #--------------------------------------------------------------------------------------------------------------------------------

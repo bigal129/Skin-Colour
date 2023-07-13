@@ -94,7 +94,7 @@ for(n in 1:N){
 			popfluc.major.pars=paste(popfluc.best.major$par,collapse=','),
 			insol.major.loglik=-insol.best.major$value,
 			insol.major.pars=paste(insol.best.major$par,collapse=','),
-      milk.major.loglik=-milk.best.major$value,
+      		milk.major.loglik=-milk.best.major$value,
 			milk.major.pars=paste(milk.best.major$par,collapse=','),
 
 			null.minor.loglik=-null.best.minor$value, 
@@ -135,4 +135,4 @@ for(n in 1:N){
 #------------------------------------------------------------------------------------------------------------------------------------------------
 write.csv(summary,file=paste('../results/parameter.search.output.',runif(1),'.csv',sep=''),row.names=F)
 #------------------------------------------------------------------------------------------------------------------------------------------------
-install.packages("rgdal")
+
