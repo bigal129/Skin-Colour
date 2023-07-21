@@ -15,17 +15,13 @@ meta <- meta[,c('master_ID','lat','long','mean_date_BP')]
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # read variables
 #------------------------------------------------------------------------------------------------------------------------------------------------
-milk <- read.csv('../model timeseries variables/milk proportion.csv')
-insol	<- read.csv('../model timeseries variables/midday insolation.csv')
-clust	<- read.csv('../model timeseries variables/cluster stat.csv')
-popfluc <- read.csv('../model timeseries variables/pop fluctuations stat.csv')
+stress <- read.csv('../model timeseries variables/porotic hyperostosis proportion.csv')
+trauma <- read.csv('../model timeseries variables/trauma deaths.csv')
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # inverse models 
 #------------------------------------------------------------------------------------------------------------------------------------------------
-milk.inv <- milk; milk.inv[,-c(1,2)] <- 1 - milk[,-c(1,2)]
-insol.inv <- insol; insol.inv[,-c(1,2)] <- 1 - insol[,-c(1,2)]
-clust.inv <- clust; clust.inv[,-c(1,2)] <- 1 - clust[,-c(1,2)] 
-popfluc.inv <- popfluc; popfluc.inv[,-c(1,2)] <- 1 - popfluc[,-c(1,2)] 
+stress.inv <- stress; stress.inv[,-c(1,2)] <- 1 - stress[,-c(1,2)] 
+trauma.inv <- trauma; trauma.inv[,-c(1,2)] <- 1 - trauma[,-c(1,2)] 
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # null model
 #------------------------------------------------------------------------------------------------------------------------------------------------
@@ -33,6 +29,7 @@ null <- clust; null[,-c(1,2)] <- 1
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # Main loop, once for each locus
 #------------------------------------------------------------------------------------------------------------------------------------------------
+for (i in 1:7){
 summary <- NULL
 N <- nrow(selected)
 for(n in 1:N){
@@ -63,73 +60,51 @@ for(n in 1:N){
 	upper <- c(1,1,1,1,1,1); lower <- c(0,0,0,0,0,0); NP <- 100; trace=T; tol <- 1e-08 # 1e-15
 
 	null.best.major <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.major, trace=trace, NP=NP)
-	insol.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	cluster.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	popfluc.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	milk.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	stress.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	trauma.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
  
 	null.best.minor <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.minor, trace=trace, NP=NP)
-	insol.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	cluster.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	popfluc.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	milk.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	stress.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	trauma.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
-	insol.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	cluster.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	popfluc.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	milk.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	stress.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	trauma.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 
-	insol.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=insol.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	cluster.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=clust.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	popfluc.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=popfluc.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	milk.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=milk.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	stress.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	trauma.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
 	# Store results
 	res <- data.frame(locus=locus,
 			null.major.loglik=-null.best.major$value, 
 			null.major.pars=paste(null.best.major$par,collapse=','),
-			cluster.major.loglik=-cluster.best.major$value,
-			cluster.major.pars=paste(cluster.best.major$par,collapse=','),
-			popfluc.major.loglik=-popfluc.best.major$value,
-			popfluc.major.pars=paste(popfluc.best.major$par,collapse=','),
-			insol.major.loglik=-insol.best.major$value,
-			insol.major.pars=paste(insol.best.major$par,collapse=','),
-      		milk.major.loglik=-milk.best.major$value,
-			milk.major.pars=paste(milk.best.major$par,collapse=','),
+			stress.major.loglik=-stress.best.major$value,
+			stress.major.pars=paste(stress.best.major$par,collapse=','),
+			trauma.major.loglik=-trauma.best.major$value,
+			trauma.major.pars=paste(trauma.best.major$par,collapse=','),
+			
 
 			null.minor.loglik=-null.best.minor$value, 
 			null.minor.pars=paste(null.best.minor$par,collapse=','),
-			cluster.minor.loglik=-cluster.best.minor$value,
-			cluster.minor.pars=paste(cluster.best.minor$par,collapse=','),
-			popfluc.minor.loglik=-popfluc.best.minor$value,
-			popfluc.minor.pars=paste(popfluc.best.minor$par,collapse=','),
-			insol.minor.loglik=-insol.best.minor$value,
-			insol.minor.pars=paste(insol.best.minor$par,collapse=','),
-			milk.minor.loglik=-milk.best.minor$value,
-			milk.minor.pars=paste(milk.best.minor$par,collapse=','),
+		  stress.minor.loglik=-stress.best.minor$value,
+			stress.minor.pars=paste(stress.best.minor$par,collapse=','),
+			trauma.minor.loglik=-trauma.best.minor$value,
+			trauma.minor.pars=paste(trauma.best.minor$par,collapse=','),
 
-			cluster.inv.major.loglik=-cluster.inv.best.major$value,
-			cluster.inv.major.pars=paste(cluster.inv.best.major$par,collapse=','),
-			popfluc.inv.major.loglik=-popfluc.inv.best.major$value,
-			popfluc.inv.major.pars=paste(popfluc.inv.best.major$par,collapse=','),
-			insol.inv.major.loglik=-insol.inv.best.major$value,
-			insol.inv.major.pars=paste(insol.inv.best.major$par,collapse=','),
-			milk.inv.major.loglik=-milk.inv.best.major$value,
-			milk.inv.major.pars=paste(milk.inv.best.major$par,collapse=','),
+			stress.inv.major.loglik=-stress.inv.best.major$value,
+			stress.inv.major.pars=paste(stress.inv.best.major$par,collapse=','),
+			trauma.inv.major.loglik=-trauma.inv.best.major$value,
+			trauma.inv.major.pars=paste(trauma.inv.best.major$par,collapse=','),
 
-			cluster.inv.minor.loglik=-cluster.inv.best.minor$value,
-			cluster.inv.minor.pars=paste(cluster.inv.best.minor$par,collapse=','),
-			popfluc.inv.minor.loglik=-popfluc.inv.best.minor$value,
-			popfluc.inv.minor.pars=paste(popfluc.inv.best.minor$par,collapse=','),
-			insol.inv.minor.loglik=-insol.inv.best.minor$value,
-			insol.inv.minor.pars=paste(insol.inv.best.minor$par,collapse=','),
-			milk.inv.minor.loglik=-milk.inv.best.minor$value,
-			milk.inv.minor.pars=paste(milk.inv.best.minor$par,collapse=',')
+			stress.inv.minor.loglik=-stress.inv.best.minor$value,
+			stress.inv.minor.pars=paste(stress.inv.best.minor$par,collapse=','),
+			trauma.inv.minor.loglik=-trauma.inv.best.minor$value,
+			trauma.inv.minor.pars=paste(trauma.inv.best.minor$par,collapse=','),
 			)	
 
 	summary <- rbind(summary,res)
 	print(paste(n,'of',N))
-	}		
+  }		
+}
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # save the overall parameter search results
 #------------------------------------------------------------------------------------------------------------------------------------------------
