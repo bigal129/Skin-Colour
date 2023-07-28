@@ -25,64 +25,63 @@ trauma.inv <- trauma; trauma.inv[,-c(1,2)] <- 1 - trauma[,-c(1,2)]
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # null model
 #------------------------------------------------------------------------------------------------------------------------------------------------
-null <- clust; null[,-c(1,2)] <- 1
+null <- stress; null[,-c(1,2)] <- 1
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # Main loop, once for each locus
 #------------------------------------------------------------------------------------------------------------------------------------------------
-for (i in 1:7){
-summary <- NULL
-N <- nrow(selected)
-for(n in 1:N){
-	locus <- selected$`RS.number`[n]
+for (i in 1:10){
+  summary <- NULL
+  N <- nrow(selected)
+  for(n in 1:N){
+	  locus <- selected$`RS.number`[n]
 
 	# sample genotypes for a specific locus, given priors and likelihoods
-	prior <- gtools::rdirichlet(1,as.numeric(selected[selected$`RS.number`==locus,c('A.count','C.count','G.count','T.count')])+1)
-	geno <- sample.genotypes(likelihoods, individuals=row.names(likelihoods), locus, prior)
-	geno <- merge(meta, geno, by.x='master_ID', by.y='individual') 
+	   prior <- gtools::rdirichlet(1,as.numeric(selected[selected$`RS.number`==locus,c('A.count','C.count','G.count','T.count')])+1)
+	  geno <- sample.genotypes(likelihoods, individuals=row.names(likelihoods), locus, prior)
+	  geno <- merge(meta, geno, by.x='master_ID', by.y='individual') 
 
 	# separate into the main four polygons of interest
-	kml.path <- '../KML/polygons.model.4.kml'
-	brit <- data.in.polygon(data=geno,kml.path=kml.path,index=1)
-	balt <- data.in.polygon(data=geno,kml.path=kml.path,index=2)
-	rhine <- data.in.polygon(data=geno,kml.path=kml.path,index=3)
-	med <- data.in.polygon(data=geno,kml.path=kml.path,index=4)
-	brit$region <- 'brit'
-	balt$region <- 'balt'
-	rhine$region <- 'rhine'
-	med$region <- 'med'
-	alleles.table <- rbind(brit,balt,rhine,med)
+	  kml.path <- '../KML/polygons.model.4.kml'
+	  brit <- data.in.polygon(data=geno,kml.path=kml.path,index=1)
+	  balt <- data.in.polygon(data=geno,kml.path=kml.path,index=2)
+	  rhine <- data.in.polygon(data=geno,kml.path=kml.path,index=3)
+  	med <- data.in.polygon(data=geno,kml.path=kml.path,index=4)
+  	brit$region <- 'brit'
+	  balt$region <- 'balt'
+	  rhine$region <- 'rhine'
+	  med$region <- 'med'
+	  alleles.table <- rbind(brit,balt,rhine,med)
 
 	# Parameter search and likelihoods
-	variant.major <- selected$`Major.allele`[selected$`RS.number`==locus]
-	variant.minor <- selected$`Minor.allele`[selected$`RS.number`==locus]
+	  variant.major <- selected$`Major.allele`[selected$`RS.number`==locus]
+	  variant.minor <- selected$`Minor.allele`[selected$`RS.number`==locus]
 
 
-	upper <- c(1,1,1,1,1,1); lower <- c(0,0,0,0,0,0); NP <- 100; trace=T; tol <- 1e-08 # 1e-15
+	  upper <- c(1,1,1,1,1,1); lower <- c(0,0,0,0,0,0); NP <- 100; trace=T; tol <- 1e-08 # 1e-15
 
-	null.best.major <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.major, trace=trace, NP=NP)
-	stress.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	trauma.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	  null.best.major <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.major, trace=trace, NP=NP)
+	  stress.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	  trauma.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
  
-	null.best.minor <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.minor, trace=trace, NP=NP)
-	stress.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	trauma.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	  null.best.minor <- JDEoptim(lower=c(0,1,0,0,0,0), upper=c(1,1,1,1,1,1), fn=obj.fnc, vars=null, alleles.table=alleles.table, variant=variant.minor, trace=trace, NP=NP)
+	  stress.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	  trauma.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
-	stress.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
-	trauma.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	  stress.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
+	  trauma.inv.best.major <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.major, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.major$par)
 
-	stress.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
-	trauma.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	  stress.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=stress.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
+	  trauma.inv.best.minor <- JDEoptim(lower=lower, upper=upper, fn=obj.fnc, vars=trauma.inv, alleles.table=alleles.table, variant=variant.minor, trace=trace, tol=tol, NP=NP, add_to_init_pop=null.best.minor$par)
 
 	# Store results
-	res <- data.frame(locus=locus,
-			null.major.loglik=-null.best.major$value, 
+	  res <- data.frame(locus=locus, 
+			null.major.loglik=-null.best.major$value,
 			null.major.pars=paste(null.best.major$par,collapse=','),
 			stress.major.loglik=-stress.best.major$value,
 			stress.major.pars=paste(stress.best.major$par,collapse=','),
 			trauma.major.loglik=-trauma.best.major$value,
 			trauma.major.pars=paste(trauma.best.major$par,collapse=','),
 			
-
 			null.minor.loglik=-null.best.minor$value, 
 			null.minor.pars=paste(null.best.minor$par,collapse=','),
 		  stress.minor.loglik=-stress.best.minor$value,
@@ -98,16 +97,16 @@ for(n in 1:N){
 			stress.inv.minor.loglik=-stress.inv.best.minor$value,
 			stress.inv.minor.pars=paste(stress.inv.best.minor$par,collapse=','),
 			trauma.inv.minor.loglik=-trauma.inv.best.minor$value,
-			trauma.inv.minor.pars=paste(trauma.inv.best.minor$par,collapse=','),
+			trauma.inv.minor.pars=paste(trauma.inv.best.minor$par,collapse=',')
 			)	
-
 	summary <- rbind(summary,res)
 	print(paste(n,'of',N))
   }		
-}
+print(i)
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # save the overall parameter search results
 #------------------------------------------------------------------------------------------------------------------------------------------------
 write.csv(summary,file=paste('../results/parameter.search.output.',runif(1),'.csv',sep=''),row.names=F)
+}
 #------------------------------------------------------------------------------------------------------------------------------------------------
 
