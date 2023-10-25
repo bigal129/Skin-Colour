@@ -13,7 +13,13 @@ selected <- read.csv('../data/Selected genes.csv')
 meta <- read.csv('../data/meta.csv')
 meta <- meta[,c('master_ID','lat','long','mean_date_BP')]
 #------------------------------------------------------------------------------------------------------------------------------------------------
-# read variables
+# read variables #1
+cluster <- read.csv('../model timeseries variables/cluster stats.csv')
+insol <- read.csv('../model timeseries variables/midday insolation.csv')
+popfluc <- read.csv('../model timeseries variables/population fluctuation.csv')
+milk <- read.csv('../model timeseries variables/milk proportion.csv')
+#------------------------------------------------------------------------------------------------------------------------------------------------
+# read variables #2
 #------------------------------------------------------------------------------------------------------------------------------------------------
 stress <- read.csv('../model timeseries variables/porotic hyperostosis proportion.csv')
 trauma <- read.csv('../model timeseries variables/trauma deaths.csv')
@@ -22,6 +28,10 @@ trauma <- read.csv('../model timeseries variables/trauma deaths.csv')
 #------------------------------------------------------------------------------------------------------------------------------------------------
 stress.inv <- stress; stress.inv[,-c(1,2)] <- 1 - stress[,-c(1,2)] 
 trauma.inv <- trauma; trauma.inv[,-c(1,2)] <- 1 - trauma[,-c(1,2)] 
+cluster.inv <- cluster; cluster.inv[,-c(1,2)] <- 1 - cluster[,-c(1,2)]
+insol.inv <- insol; insol.inv[,-c(1,2)] <- 1 - insol[,-c(1,2)]
+popfluc.inv <- popfluc; popfluc.inv[,-c(1,2)] <- 1 - popfluc[,-c(1,2)]
+milk.inv <- milk; milk.inv[,-c(1,2)] <- 1 - milk[,-c(1,2)]
 #------------------------------------------------------------------------------------------------------------------------------------------------
 # null model
 #------------------------------------------------------------------------------------------------------------------------------------------------
